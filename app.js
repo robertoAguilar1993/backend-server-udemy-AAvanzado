@@ -1,7 +1,11 @@
 // Requires
 var expless = require('express');
 var mongoose = require('mongoose');
+
+
 //var people = require('./people');
+var bodyParser = require('body-parser')
+
 
 
 
@@ -9,12 +13,18 @@ var mongoose = require('mongoose');
 var app = expless();
 //mongoose.Promise = global.Promise;
 
+//Importar rutas
+var appRoutes = require('./routes/app');
+var usuariosRoutes = require('./routes/usuario');
+var loginRoutes = require('./routes/login');
 
-app.get('/',  (req, res)=> {
-    res.json({
-        message: 'Hello World!'
-    });
-});
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+ 
+// parse application/json
+app.use(bodyParser.json())
+
 
 app.get('/persona',  (req, res)=> {
     res.json(
@@ -23,6 +33,11 @@ app.get('/persona',  (req, res)=> {
         }      
     );
 });
+
+app.use('/usuario', usuariosRoutes);
+app.use('/login', loginRoutes);
+app.use('/', appRoutes);
+
 
 
 //Escuchar peticiones
