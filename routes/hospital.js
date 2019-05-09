@@ -27,7 +27,7 @@ app.get('/', (req, res)=> {
         .exec((err, hospitales)=>{
             if( err ){
                 console.log('************************* Error al obtener los hosputales ************************');
-                res.status(500).json({
+                return res.status(500).json({
                     ok: false,
                     mensaje: 'Error: No se pudo obtener los hospitales',
                     error: err
@@ -36,7 +36,7 @@ app.get('/', (req, res)=> {
             console.log(hospitales);
 
             Hospital.count({ },(err, conteo)=>{
-                res.status(200).json({
+                return res.status(200).json({
                     ok: true,
                     mensaje: 'ok',
                     hospitales: hospitales,

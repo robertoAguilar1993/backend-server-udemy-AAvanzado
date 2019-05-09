@@ -30,7 +30,7 @@ app.get('/',  (req, res)=> {
         .exec((err, usuarios) => {
             if ( err ) {
                 console.log('************************* Error al obtener los usuarios ************************');
-                res.status(500).json({
+                return res.status(500).json({
                     ok: false,
                     mensaje: 'Error en base de datos, cargando usuarios!',
                     errors: err
@@ -40,7 +40,7 @@ app.get('/',  (req, res)=> {
 
             Usuario.count({}, (err, conteo)=>{
                 console.log('Total de usuarios: ' + conteo);
-                res.status(200).json({
+                return res.status(200).json({
                     ok: true,
                     mensaje: 'get de Usuario!',
                     results: usuarios,
@@ -91,7 +91,7 @@ app.put('/:id',mdAutenticacion.verificaToken ,(req, res)=> {
                 });
             }
             usuarioUpdate.password = ':)';
-            res.status(200).json({
+            return res.status(200).json({
                 ok: true,
                 mensaje: 'Usuario Actualizado!',
                 usuario: usuarioUpdate
@@ -118,14 +118,14 @@ app.post('/', mdAutenticacion.verificaToken, (req, res)=> {
 
     usuario.save((err, usuarioGuardado) => {
         if(err){
-            res.status(400).json({
+            return res.status(400).json({
                 ok: false,
                 mensaje: 'Error en base de datos, No se pudo guardar en la base de datos!',
                 errors: err
             });
         }
 
-        res.status(201).json({
+        return res.status(201).json({
             ok: true,
             mensaje: 'save de Usuario!',
             usuario: usuarioGuardado

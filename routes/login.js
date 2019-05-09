@@ -17,7 +17,7 @@ app.post('/', (req, res)=> {
 
     Usuario.findOne({email: body.email}, (err, usuarioDB)=>{
         if(err){
-            res.status(500).json({
+            return res.status(500).json({
                 ok: false,
                 mensaje: 'Error en base de datos, No se pudo obtener registro del usuario!',
                 errors: err
