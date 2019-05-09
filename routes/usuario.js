@@ -8,23 +8,44 @@ var app = express();
 
 var Usuario = require('../models/usuario');
 
+
+const LIMIT = require('../config/config').LIMIT;
+
 /**
  * Obtener todos los usuarios
  */
 app.get('/',  (req, res)=> {
+    console.log('************************* Obtener Usuarios ************************');
+
+    var desde = req.query.desde || 0;
+    desde = Number(desde);
+
+    console.log('desde: ' + desde);
+    console.log('Limit: ' + LIMIT);
+
+
     Usuario.find({ }, '_id nombre email img role ')
+        .skip(desde)
+        .limit(LIMIT)
         .exec((err, usuarios) => {
             if ( err ) {
+                console.log('************************* Error al obtener los usuarios ************************');
                 res.status(500).json({
                     ok: false,
                     mensaje: 'Error en base de datos, cargando usuarios!',
                     errors: err
                 });
             }
-            res.status(200).json({
-                ok: true,
-                mensaje: 'get de Usuario!',
-                results: usuarios
+            console.log(usuarios);
+
+            Usuario.count({}, (err, conteo)=>{
+                console.log('Total de usuarios: ' + conteo);
+                res.status(200).json({
+                    ok: true,
+                    mensaje: 'get de Usuario!',
+                    results: usuarios,
+                    total: conteo
+                });
             });
          });
 });
@@ -85,7 +106,7 @@ app.put('/:id',mdAutenticacion.verificaToken ,(req, res)=> {
  * Guardar un  usuario
  */
 app.post('/', mdAutenticacion.verificaToken, (req, res)=> {
-    console.log(req.body);
+    
     var body = req.body;
     var usuario = new Usuario({
         nombre: body.nombre,
@@ -127,7 +148,7 @@ app.delete('/:id', mdAutenticacion.verificaToken ,(req, res)=>{
             });  
         }
 
-        if( !usuario ){
+        if( !usuarioBorrado ){
             return res.status(400).json({
                 ok: false,
                 mensaje: 'No existe el usuario: ' + id,

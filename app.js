@@ -7,8 +7,6 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser')
 
 
-
-
 //Inicializar variabres
 var app = expless();
 //mongoose.Promise = global.Promise;
@@ -17,6 +15,12 @@ var app = expless();
 var appRoutes = require('./routes/app');
 var usuariosRoutes = require('./routes/usuario');
 var loginRoutes = require('./routes/login');
+var hospitalRoutes = require('./routes/hospital');
+var medicoRoutes = require('./routes/medico');
+var busquedaRoutes = require('./routes/busqueda');
+var uploadRoutes = require('./routes/upload');
+var imagenesRoutes = require('./routes/imagenes');
+
 
 
 // parse application/x-www-form-urlencoded
@@ -24,18 +28,16 @@ app.use(bodyParser.urlencoded({ extended: false }))
  
 // parse application/json
 app.use(bodyParser.json())
-
-
-app.get('/persona',  (req, res)=> {
-    res.json(
-        {
-            name: 'BETO'
-        }      
-    );
-});
-
 app.use('/usuario', usuariosRoutes);
 app.use('/login', loginRoutes);
+app.use('/hospital', hospitalRoutes);
+app.use('/medico', medicoRoutes);
+app.use('/busqueda',busquedaRoutes);
+app.use('/upload', uploadRoutes);
+app.use('/img', imagenesRoutes);
+
+
+//Esta ruta debe ir al final
 app.use('/', appRoutes);
 
 
