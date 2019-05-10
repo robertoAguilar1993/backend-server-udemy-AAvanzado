@@ -176,6 +176,7 @@ function uploadImgUsuario(id,nombreArchivo,res){
     });
 }
 
+
 function validarExistArchivo(pathViejo){
     //Si existe elimina la imagen anterios
     if ( fs.existsSync( pathViejo ) ) {
