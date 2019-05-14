@@ -40,6 +40,7 @@ async function verify(token) {
  * para la autenticacion por google
  */
 app.post('/google', async (req, res)=>{
+    console.log('para la autenticacion por google');
    var token = req.body.token;
    var googleUser = await verify(token).catch(e=>{
        return res.status(403).json({
@@ -48,6 +49,9 @@ app.post('/google', async (req, res)=>{
         errors: {mensaje: 'token no valido'}
        });
    })
+
+   console.log('googleUser');
+   console.log(googleUser);
 
    Usuario.findOne({email: googleUser.email}, (err, usuarioDB)=>{
         if(err){
@@ -58,8 +62,13 @@ app.post('/google', async (req, res)=>{
             });
         }
 
-        if( !usuarioDB ){
-            if ( usuarioDB.google ){
+        console.log('usuarioDB');
+        console.log(usuarioDB);
+
+        if( usuarioDB != null ){
+            console.log('Entrando en la condicion donde el usurio de la base de datos tiene que ser diferente a null');
+            console.log(usuarioDB);
+            if ( !usuarioDB.google ){
                 return res.status(400).json({
                     ok: false,
                     mensaje: 'Debe de usuar su autenticación normal ',
@@ -78,19 +87,31 @@ app.post('/google', async (req, res)=>{
                 });
             }
         }else {
+            console.log('Entro a cargar el usuario');
             var usuario = new Usuario();
-            usuario.nombre = googleUser.name;
+            usuario.nombre = googleUser.nombre;
             usuario.email = googleUser.email;
             usuario.imag = googleUser.img;
             usuario.google = googleUser.google;
             usuario.password = ':)';
 
+            console.log('Usuario');
+            console.log(usuario);
+
             usuario.save((err, usuarioPersis)=>{
-                return res.status(500).json({
-                    ok: false,
-                    mensaje: 'Error en base de datos, No se pudo guardar  el usuario!',
-                    errors: err
-                });
+                console.log('usuario en persis');
+                console.log(usuarioPersis);
+
+                console.error(err);
+
+                if ( err ){ 
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error en base de datos, No se pudo guardar  el usuario!',
+                        errors: err
+                    });
+                }
+                
 
                 //crear un token
                 var token = jwt.sign({ usuario: usuarioDB }, SEED, {expiresIn: 14442});
@@ -137,6 +158,9 @@ app.post('/', (req, res)=> {
         //crear un token
         var token = jwt.sign({ usuario: usuarioDB }, SEED, {expiresIn: 14442});
         usuarioDB.password = ':)';
+
+        console.log('login');
+        console.log(usuarioDB);
 
         return res.status(200).json({
             ok: true,

@@ -104,7 +104,7 @@ function uploadImgHopital(id,nombreArchivo,res){
                 errors: {mensaje: 'El hospital no existe'} 
             });
         }
-        var pathViejo = './uploads/hospitales/' + usuario.img;
+        var pathViejo = './uploads/hospitales/' + hospital.img;
 
         validarExistArchivo(pathViejo);
 

@@ -105,9 +105,12 @@ app.put('/:id',mdAutenticacion.verificaToken ,(req, res)=> {
 /**
  * Guardar un  usuario
  */
-app.post('/', mdAutenticacion.verificaToken, (req, res)=> {
+app.post('/', (req, res)=> {
+
     
     var body = req.body;
+    console.log('Guardar un  usuario');
+    console.log(body);
     var usuario = new Usuario({
         nombre: body.nombre,
         email: body.email,
