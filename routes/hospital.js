@@ -47,6 +47,33 @@ app.get('/', (req, res)=> {
 });
 
 /**
+ * Obtener hospital por id
+ */
+app.get('/:id', (req, res)=>{
+    var id = req.params.id;
+
+    Hospital.findById(id)
+        .populate('usuario', 'nombre img email')
+        .exec((err, hospital)=>{
+            if( err ){
+                console.log('************************* Error al obtener los hospitales ************************');
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error: No se pudo obtener los hospitales',
+                    error: err
+                });
+            }
+
+            return res.status(200).json({
+                ok: true,
+                mensaje: 'ok',
+                hospital: hospital
+            });
+        })
+
+});
+
+/**
  * Guardar un hospital
  */
 app.post('/',mdAutenticacion.verificaToken,(req, res)=>{
@@ -129,7 +156,7 @@ app.put('/:id',mdAutenticacion.verificaToken,(req, res)=>{
             res.status(200).json({
                 ok: true,
                 mensaje: 'Hospital Actualizado!',
-                usuario: hospitalUpdate
+                hospital: hospitalUpdate
             });
             
         });

@@ -132,7 +132,14 @@ function uploadImgMedico(id,nombreArchivo,res){
             });
         }
 
-        var pathViejo = './uploads/medicos/' + usuario.img;
+        let imagen;
+        if(medico.img){
+            imagen = medico.img;
+        }else {
+            imagen='xx';
+        }
+
+        var pathViejo = './uploads/medicos/' + imagen;
 
         validarExistArchivo(pathViejo);
 

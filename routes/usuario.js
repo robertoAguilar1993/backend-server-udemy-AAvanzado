@@ -24,7 +24,7 @@ app.get('/',  (req, res)=> {
     console.log('Limit: ' + LIMIT);
 
 
-    Usuario.find({ }, '_id nombre email img role ')
+    Usuario.find({ }, '_id nombre email img role google ')
         .skip(desde)
         .limit(LIMIT)
         .exec((err, usuarios) => {

@@ -83,7 +83,8 @@ app.post('/google', async (req, res)=>{
                     ok: true,
                     mensaje: 'ok',
                     usuario: usuarioDB,
-                    token: token
+                    token: token,
+                    menu: obtenerMenu( usuarioDB.role )
                 });
             }
         }else {
@@ -91,7 +92,7 @@ app.post('/google', async (req, res)=>{
             var usuario = new Usuario();
             usuario.nombre = googleUser.nombre;
             usuario.email = googleUser.email;
-            usuario.imag = googleUser.img;
+            usuario.img = googleUser.img;
             usuario.google = googleUser.google;
             usuario.password = ':)';
 
@@ -121,7 +122,8 @@ app.post('/google', async (req, res)=>{
                     ok: true,
                     mensaje: 'ok',
                     usuario: usuarioPersis,
-                    token: token
+                    token: token,
+                    menu: obtenerMenu( usuarioPersis.role )
                 });
             });
         }
@@ -166,7 +168,8 @@ app.post('/', (req, res)=> {
             ok: true,
             mensaje: 'ok',
             usuario: usuarioDB,
-            token: token
+            token: token,
+            menu: obtenerMenu( usuarioDB.role )
         });
 
 
@@ -177,6 +180,45 @@ app.post('/', (req, res)=> {
 });
 
 
+
+function obtenerMenu( ROLE ) {
+
+    var menu= [
+        {
+          titulo: 'Principal',
+          icono: 'mdi mdi-gauge',
+          submenu: [
+            { titulo: 'Dashboard', url: '/dashboard' },
+            { titulo : 'ProgressBar', url: '/progress' },
+            { titulo: 'Gráficas', url: '/graficas1' },
+            { titulo: 'Promesas', url: '/promesas' },
+            { titulo: 'Rxjs', url: '/rxjs' }
+          ]
+        },
+        {
+          titulo: 'Tablas',
+          icono: 'mdi mdi-table',
+          submenu: [
+            { titulo: 'Tables', url: '/tables' }
+          ]
+        },
+        {
+          titulo: 'Mantenimientos',
+          icono: 'mdi mdi-folder-lock-open',
+          submenu: [
+            // { titulo: 'Usuarios', url: '/usuarios' },
+            { titulo: 'Hospitales', url: '/hospitales' },
+            { titulo: 'Medicos', url: '/medicos' }
+          ]
+        }
+      ];
+
+      if ( ROLE === 'ADMIN_ROLE' ) {
+        menu[2].submenu.unshift( { titulo: 'Usuarios', url: '/usuarios' } );
+      }
+      
+    return menu;
+}
 
 
 module.exports = app; 

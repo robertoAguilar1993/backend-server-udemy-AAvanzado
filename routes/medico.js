@@ -49,6 +49,37 @@ app.get('/', (req, res)=>{
 });
 
 /**
+ * Obtener medico por id
+ */
+app.get('/:id', (req, res)=>{
+    console.log('************************* Obtener Medico ************************');
+    
+    var id = req.params.id;
+    
+    Medico.findById(id)
+        .populate('usuario', '_id nombre email')
+        .populate('hospital')
+        .exec((err, medico)=>{
+            if( err){
+                console.log('************************* Error al obtener el medico ************************');
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error en base de datos, cargando el medico!' + id,
+                    errors: err
+                });
+            }
+            console.log(medico);
+
+            return res.status(200).json({
+                ok: true,
+                mensaje: 'ok',
+                medico: medico
+            });
+        });
+});
+
+
+/**
  * Crear hospital
  */
 app.post('/',mdAutenticacion.verificaToken ,(req, res)=>{
@@ -61,7 +92,8 @@ app.post('/',mdAutenticacion.verificaToken ,(req, res)=>{
     var medico = new Medico({
         nombre: body.nombre,
         usuario: req.usuario._id,
-        hospital: body.idHospital
+        hospital: body.hospital,
+        img: ''
     });
 
 
@@ -117,7 +149,7 @@ app.put('/:id',mdAutenticacion.verificaToken ,(req, res)=>{
         var body = req.body;
         medico.nombre = body.nombre;
         medico.usuario = req.usuario._id;
-        medico.hospital = body.idHospital;
+        medico.hospital = body.hospital;
 
         console.log(medico);
 
